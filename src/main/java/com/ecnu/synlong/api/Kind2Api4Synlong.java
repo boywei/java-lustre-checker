@@ -1,8 +1,9 @@
 package com.ecnu.synlong.api;
 
+import com.ecnu.synlong.common.SolverOption;
+import com.ecnu.synlong.common.ValidationResult;
 import edu.uiowa.cs.clc.kind2.Kind2Exception;
 import edu.uiowa.cs.clc.kind2.api.*;
-import edu.uiowa.cs.clc.kind2.results.Result;
 import lombok.Data;
 
 import java.io.FileWriter;
@@ -13,7 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-public class Kind2Api4Synlong extends Kind2Api {
+public class Kind2Api4Synlong /*extends Kind2Api*/ {
+
+	private static final String KIND2 = "kind2";
 
 	private static final long POLL_INTERVAL = 100;
 
@@ -104,18 +107,33 @@ public class Kind2Api4Synlong extends Kind2Api {
 	private String lusMain;
 	private String fakeFilepath;
 
+	//TODO 改为相对路径
 	private static final String FILE_PATH = "/home/keepcalmm/ideaProjects/synlong/file/test_lustre.lus";
 
-	@Override
-	public void execute(String program, Result result, IProgressMonitor monitor) {
+
+	public ValidationResult execute(String program) {
+		ValidationResult validationResult = new ValidationResult();
+		execute(program, validationResult, new IProgressMonitor() {
+			@Override
+			public boolean isCanceled() {
+				return false;
+			}
+
+			@Override
+			public void done() {}
+		});
+		return validationResult;
+	}
+
+	public void execute(String program, ValidationResult validationResult, IProgressMonitor monitor) {
 		try {
-			callKind2(program, result, monitor);
+			callKind2(program, validationResult, monitor);
 		} catch (Throwable t) {
 			throw new Kind2Exception(t.getMessage(), t);
 		}
 	}
 
-	private void callKind2(String program, Result result, IProgressMonitor monitor)
+	private void callKind2(String program, ValidationResult validationResult, IProgressMonitor monitor)
 			throws IOException, InterruptedException {
 		ProcessBuilder builder = getKind2ProcessBuilder();
 		// TODO
@@ -126,9 +144,6 @@ public class Kind2Api4Synlong extends Kind2Api {
 
 		try {
 			process = builder.start();
-			process.getOutputStream().write(program.getBytes());
-			process.getOutputStream().flush();
-			process.getOutputStream().close();
 			while (!monitor.isCanceled() && process.isAlive()) {
 				int available = process.getInputStream().available();
 				byte[] bytes = new byte[available];
@@ -143,7 +158,7 @@ public class Kind2Api4Synlong extends Kind2Api {
 				process.getInputStream().read(bytes);
 				output += new String(bytes);
 				try {
-					result.initialize(output);
+					validationResult.initialize(output);
 				} catch (RuntimeException e) {
 				}
 			}
@@ -155,7 +170,28 @@ public class Kind2Api4Synlong extends Kind2Api {
 	}
 
 	/**
+	 * 判断Kind2是否可用
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkKind2Available() throws IOException {
+		ProcessBuilder builder = new ProcessBuilder("bash -c" + KIND2, "--version");
+		builder.redirectErrorStream(true);
+		Process process = builder.start();
+
+//		String output = ApiUtil.readAll(process.getInputStream());
+		if (process.exitValue() != 0) {
+			return false;
+		} else {
+			return true;
+		}
+//		return output;
+	}
+
+	/**
 	 * 保存传入的lustre模型
+	 *
 	 * @param program
 	 */
 	private void saveKind2Program(String program) {
@@ -176,6 +212,7 @@ public class Kind2Api4Synlong extends Kind2Api {
 
 	/**
 	 * 获取ProcessBuilder对象，并设置执行命令
+	 *
 	 * @return ProcessBuilder对象
 	 */
 	private ProcessBuilder getKind2ProcessBuilder() {
@@ -183,7 +220,7 @@ public class Kind2Api4Synlong extends Kind2Api {
 		options.add("bash");
 		options.add("-c");
 		options.add(KIND2);
-		options.add(FILE_PATH); // TODO: 扩展
+		options.add(FILE_PATH);
 		options.add("--smt_solver");
 		options.add(smtSolver.toString());
 //		options.add("--z3_bin");
@@ -474,6 +511,7 @@ public class Kind2Api4Synlong extends Kind2Api {
 		options.addAll(this.otherOptions);
 		return options;
 	}
+
 	public void setSmtSolver(SolverOption smtSolver) {
 		this.smtSolver = smtSolver;
 	}
