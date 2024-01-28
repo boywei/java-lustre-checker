@@ -3,7 +3,6 @@ package com.ecnu.synlong.controller;
 import com.ecnu.synlong.api.Kind2Api4Synlong;
 import com.ecnu.synlong.common.R;
 import com.ecnu.synlong.common.SolverOption;
-import com.ecnu.synlong.common.ValidationResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -23,8 +22,8 @@ public class ValidationController {
 		// 设置求解器
 		api.setSmtSolver(smtSolver);
 		// 执行验证
-		ValidationResult validationResult = api.execute(program);
-		return R.ok().put("validationResult", validationResult);
+		String output = api.execute(program);
+		return R.ok().put("validationResult", output);
 	}
 
 	// TODO: 下载文件功能
