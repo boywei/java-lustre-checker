@@ -1,6 +1,7 @@
 package com.ecnu.synlong;
 
 import com.ecnu.synlong.api.Kind2Api4Synlong;
+import com.ecnu.synlong.common.SolverOption;
 import edu.uiowa.cs.clc.kind2.lustre.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,9 +10,16 @@ import javax.tools.Diagnostic;
 import java.util.Arrays;
 import java.util.Collections;
 
+
 @SpringBootTest
 class SynlongApplicationTests {
 
+
+	@Test
+	void testSolverOption() {
+		SolverOption z3 = SolverOption.getBySmtSolver("z3");
+		System.out.println(z3.toString());
+	}
 
 	/**
 	 * Run the main function to print the generated Lustre program and results of calling Kind 2.
