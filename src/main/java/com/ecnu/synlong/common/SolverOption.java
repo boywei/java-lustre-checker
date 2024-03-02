@@ -5,10 +5,11 @@ public enum SolverOption {
 
 	public static SolverOption getBySmtSolver(String smtSolver) {
 		if(smtSolver == null) {
+			System.out.println("null是从这返回的");
 			return null;
 		}
 		for(SolverOption option : SolverOption.values()) {
-			if(smtSolver.equals(option.toString())) {
+			if(smtSolver.equalsIgnoreCase(option.toString())) {
 				return option;
 			}
 		}

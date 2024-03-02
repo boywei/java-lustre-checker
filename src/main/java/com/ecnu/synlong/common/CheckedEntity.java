@@ -7,6 +7,6 @@ import lombok.Data;
 public class CheckedEntity {
 	String code;
 
-	@JsonProperty("smt_solver")
+	@JsonProperty("selectedSolver")
 	String smtSolver;
 }
