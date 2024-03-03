@@ -2,18 +2,12 @@ package com.ecnu.synlong.common;
 
 import lombok.Data;
 
-@Data
-public class Output {
-    private String result;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-    public Output() {
-    }
+public class Output<E> extends ArrayList<E> {
+    public Output(List<E> strings) {
 
-    public Output(String result) {
-        this.result = result;
-    }
-
-    public String toString() {
-        return result;
     }
 }

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 
 @SpringBootTest
@@ -33,8 +34,10 @@ class SynlongApplicationTests {
         api.setSmtSolver(SolverOption.getBySmtSolver(smtSolver));
         System.out.println(api.getSmtSolver());
         // 执行验证
-        Output output = api.execute(program);
-        System.out.println(output.toString());
+        List<String> output = api.execute(program);
+        for (String s:output) {
+            System.out.println(s);
+        }
     }
     @Test
     void testSolverOption() {
@@ -55,11 +58,8 @@ class SynlongApplicationTests {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-
-                output.append(line);
-
+                output.append(removeAnsiEscapeCodes(line));
                 output.append("\n"); // 如果需要在每行之间添加换行符
-
             }
 
             int exitCode = process.waitFor();
@@ -69,11 +69,17 @@ class SynlongApplicationTests {
         } catch (IOException | InterruptedException e) {
             throw new Kind2Exception("执行命令时发生错误: " + e.getMessage(), e);
         }
-        Output out = OutputUtil.OutputInitialize(output.toString().trim());
-        System.out.println(out.toString());
+        List<String> out = OutputUtil.OutputInitialize(output.toString().trim());
+        for (String s:out) {
+            System.out.println(s);
+        }
 //        System.out.println(output.toString().trim());
     }
+    private static String removeAnsiEscapeCodes(String input) {
 
+        return input.replaceAll("\u001B\\[[;\\d]*m", "");
+
+    }
 
     /**
      * Run the main function to print the generated Lustre program and results of calling Kind 2.
@@ -105,9 +111,11 @@ class SynlongApplicationTests {
         Kind2Api4Synlong api = new Kind2Api4Synlong();
         // Call Kind2Api's execute method to run Kind 2 analysis on the lustre program. The results of
         // the analysis are saved in a Kind2Result object
-        Output result = api.execute(pb.build().toString());
+        List<String> result = api.execute(pb.build().toString());
 
-        System.out.println("result: " + result);
+        for (String s:result) {
+            System.out.println(s);
+        }
         // Check if the result object is initialized before printing it.
 //		if (result.isInitialized()) {
 //			System.out.println(result);

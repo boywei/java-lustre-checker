@@ -2,7 +2,9 @@ package com.ecnu.synlong.api;
 
 import com.ecnu.synlong.common.Output;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,11 @@ public class OutputUtil {
         return null;
     }
 
+    /**
+     * 将kind2输出的结果按行处理
+     * @param multiLineString
+     * @return
+     */
     private static List<String> readStringByLine(String multiLineString) {
         // 按照换行符分割字符串
         String[] lines = multiLineString.split("\\n");
@@ -31,10 +38,16 @@ public class OutputUtil {
                 .collect(Collectors.toList());
     }
 
-    public static Output OutputInitialize(String output) {
-        List<String> strings = readStringByLine(output);
-        String result = String.join("\n", strings);
+    // TODO
+    /*
+    result: kind2 v2.1.1
+    Analyzing check_CruiseController2
+    Accelerating: valid (k=9)
+    Bounded speed: valid (k=9)
+    Sprinting: valid (k=11)
+     */
+    public static List<String> OutputInitialize(String output) {
 
-        return new Output(result);
+        return readStringByLine(output);
     }
 }

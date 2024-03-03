@@ -31,7 +31,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
 
 
 
-    public Output execute(String program) {
+    public List<String> execute(String program) {
 //        return execute(program, new IProgressMonitor() {
 //            @Override
 //            public boolean isCanceled() {
@@ -94,7 +94,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return output;
     }
 
-    public Output callKind2(String program) {
+    public List<String> callKind2(String program) {
 
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
@@ -108,7 +108,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
             String line;
             while ((line = reader.readLine()) != null) {
 
-                output.append(line);
+                output.append(removeAnsiEscapeCodes(line));
 
                 output.append("\n"); // 如果需要在每行之间添加换行符
 
@@ -125,7 +125,11 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return OutputUtil.OutputInitialize(output.toString().trim()); // 返回处理过的输出结果
 
     }
+    private static String removeAnsiEscapeCodes(String input) {
 
+        return input.replaceAll("\u001B\\[[;\\d]*m", "");
+
+    }
 
     /**
      * 保存传入的lustre模型
