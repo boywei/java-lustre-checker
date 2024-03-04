@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.Setter;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class Kind2Api4Synlong /*extends Kind2Api*/ {
@@ -30,8 +27,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
     private static final String FILE_PATH = "/home/jiang/Documents/ECNU/synlong/synlong/file/test.lus";
 
 
-
-    public List<String> execute(String program) {
+    public Output<String, Map<String, String>> execute(String program) {
 //        return execute(program, new IProgressMonitor() {
 //            @Override
 //            public boolean isCanceled() {
@@ -54,7 +50,8 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         }
 
     }
-	@Deprecated
+
+    @Deprecated
     private String callKind2(String program, IProgressMonitor monitor)
             throws IOException, InterruptedException {
 //		ProcessBuilder builder = getKind2ProcessBuilder();
@@ -94,8 +91,8 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return output;
     }
 
-    public List<String> callKind2(String program) {
-
+    //    public List<String> callKind2(String program) {
+    public Output<String, Map<String, String>> callKind2(String program) {
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
 
@@ -107,7 +104,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-
+                // 将输出结果去除命令行格式
                 output.append(removeAnsiEscapeCodes(line));
 
                 output.append("\n"); // 如果需要在每行之间添加换行符
@@ -122,9 +119,10 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
             throw new Kind2Exception("执行命令时发生错误: " + e.getMessage(), e);
         }
 
-        return OutputUtil.OutputInitialize(output.toString().trim()); // 返回处理过的输出结果
-
+//        return OutputUtil.OutputInitialize(output.toString().trim()); // 返回处理过的输出结果
+        return OutputUtil.OutputInit(output.toString().trim());
     }
+
     private static String removeAnsiEscapeCodes(String input) {
 
         return input.replaceAll("\u001B\\[[;\\d]*m", "");

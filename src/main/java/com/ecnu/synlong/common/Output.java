@@ -6,8 +6,5 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Output<E> extends ArrayList<E> {
-    public Output(List<E> strings) {
-
-    }
+public class Output<K, V> extends HashMap<K, V> {
 }

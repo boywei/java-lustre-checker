@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/kind2")
@@ -25,10 +26,8 @@ public class ValidationController {
 		// TODO 该操作会传入错误的api.smtSolver
 		api.setSmtSolver(SolverOption.getBySmtSolver(smtSolver));
 		// 执行验证
-		List<String> output = api.execute(program);
-		for (String s:output) {
-			System.out.println(s);
-		}
+//		List<String> output = api.execute(program);
+		Output<String, Map<String, String>> output = api.execute(program);
 		return R.ok().put("data", output);
 //		return R.ok().put("data", checkedEntity);
 	}
@@ -37,4 +36,6 @@ public class ValidationController {
 	public R load() {
 		return null;
 	}
+
+
 }
