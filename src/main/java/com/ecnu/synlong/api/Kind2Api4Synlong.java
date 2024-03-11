@@ -91,7 +91,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return output;
     }
 
-    //    public List<String> callKind2(String program) {
+//    public List<String> callKind2(String program) {
     public Output<String, Map<String, String>> callKind2(String program) {
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
@@ -99,6 +99,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         try {
             // 创建一个新的进程
             Process process = getKind2ProcessBuilder().start();
+            System.out.println(ApiUtil.getQuotedCommand(getKind2ProcessBuilder().command()));
 
             // 从进程的输出流读取结果
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -123,6 +124,9 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return OutputUtil.OutputInit(output.toString().trim());
     }
 
+    /**
+     * 格式化 kind2 输出
+     */
     private static String removeAnsiEscapeCodes(String input) {
 
         return input.replaceAll("\u001B\\[[;\\d]*m", "");
@@ -131,8 +135,6 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
 
     /**
      * 保存传入的lustre模型
-     *
-     * @param program
      */
     private void saveKind2Program(String program) {
         try {
@@ -172,7 +174,6 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         options.add("--smt_solver");
         options.add(smtSolver.toString());
 //		options.add("--z3_bin");
-//		options.add("/Users/wei/z3-4.12.5-arm64-osx-11.0/bin/z3");
 //		options.addAll(getOptions());
         ProcessBuilder builder = new ProcessBuilder(options);
         builder.redirectErrorStream(true);

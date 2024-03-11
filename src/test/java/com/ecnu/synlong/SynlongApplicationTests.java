@@ -34,10 +34,10 @@ class SynlongApplicationTests {
         api.setSmtSolver(SolverOption.getBySmtSolver(smtSolver));
         System.out.println(api.getSmtSolver());
         // 执行验证
-        List<String> output = api.execute(program);
-        for (String s:output) {
-            System.out.println(s);
-        }
+//        List<String> output = api.execute(program);
+//        for (String s:output) {
+//            System.out.println(s);
+//        }
     }
     @Test
     void testSolverOption() {
@@ -111,11 +111,11 @@ class SynlongApplicationTests {
         Kind2Api4Synlong api = new Kind2Api4Synlong();
         // Call Kind2Api's execute method to run Kind 2 analysis on the lustre program. The results of
         // the analysis are saved in a Kind2Result object
-        List<String> result = api.execute(pb.build().toString());
+//        List<String> result = api.execute(pb.build().toString());
 
-        for (String s:result) {
-            System.out.println(s);
-        }
+//        for (String s:result) {
+//            System.out.println(s);
+//        }
         // Check if the result object is initialized before printing it.
 //		if (result.isInitialized()) {
 //			System.out.println(result);

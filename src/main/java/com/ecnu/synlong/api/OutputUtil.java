@@ -36,14 +36,6 @@ public class OutputUtil {
                 .collect(Collectors.toList());
     }
 
-
-    /*
-    result: kind2 v2.1.1
-    Analyzing check_CruiseController2
-    Accelerating: valid (k=9)
-    Bounded speed: valid (k=9)
-    Sprinting: valid (k=11)
-     */
     public static List<String> OutputInitialize(String output) {
 
         return readStringByLine(output);
@@ -63,13 +55,6 @@ public class OutputUtil {
                 .collect(Collectors.toList());
 
 //        out.forEach(System.out::println);
-        /**
-            处理完后的数据
-            Analyzing check_CruiseController2
-            Accelerating: valid (k=9)
-            Bounded speed: valid (k=9)
-            Sprinting: valid (k=11)
-         */
         Output<String, Map<String, String>> result = new Output<>();
 
         String key = "";
