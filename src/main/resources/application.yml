@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+kind2:
+  path: "/usr/local/kind2/kind2"
+  file:
+    path: "/home/jiang/Documents/ECNU/synlong/synlong/file/test.lus"
+
+

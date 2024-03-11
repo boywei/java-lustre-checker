@@ -6,38 +6,34 @@ import edu.uiowa.cs.clc.kind2.Kind2Exception;
 import edu.uiowa.cs.clc.kind2.api.*;
 import lombok.Data;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
 
 @Data
+@Component
 public class Kind2Api4Synlong /*extends Kind2Api*/ {
 
-    //TODO 挂载服务器时需修改
-    private static final String KIND2 = "/usr/local/kind2/kind2";
+    @Value("${kind2.path}")
+    private String KIND2;
     // 睡眠时间
     private static final long POLL_INTERVAL = 100;
 
     // module smt
     private SolverOption smtSolver = SolverOption.Z3;
 
-    private String z3Bin;
+//    private String z3Bin;
 
-    //TODO 挂载服务器时需修改
-    private static final String FILE_PATH = "/home/jiang/Documents/ECNU/synlong/synlong/file/test.lus";
+    @Value("${kind2.file.path}")
+    private String FILE_PATH;
 
+    public String getCommand() {
+        return ApiUtil.getQuotedCommand(getKind2ProcessBuilder().command());
+    }
 
     public Output<String, Map<String, String>> execute(String program) {
-//        return execute(program, new IProgressMonitor() {
-//            @Override
-//            public boolean isCanceled() {
-//                return false;
-//            }
-//
-//            @Override
-//            public void done() {
-//            }
-//        });
         return callKind2(program);
     }
 
@@ -91,7 +87,9 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         return output;
     }
 
-//    public List<String> callKind2(String program) {
+    /**
+     * 调用kind2
+     */
     public Output<String, Map<String, String>> callKind2(String program) {
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
@@ -120,7 +118,6 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
             throw new Kind2Exception("执行命令时发生错误: " + e.getMessage(), e);
         }
 
-//        return OutputUtil.OutputInitialize(output.toString().trim()); // 返回处理过的输出结果
         return OutputUtil.OutputInit(output.toString().trim());
     }
 
@@ -174,7 +171,6 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         options.add("--smt_solver");
         options.add(smtSolver.toString());
 //		options.add("--z3_bin");
-//		options.addAll(getOptions());
         ProcessBuilder builder = new ProcessBuilder(options);
         builder.redirectErrorStream(true);
         return builder;

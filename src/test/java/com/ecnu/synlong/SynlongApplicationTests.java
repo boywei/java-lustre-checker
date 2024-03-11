@@ -7,6 +7,7 @@ import com.ecnu.synlong.common.SolverOption;
 import edu.uiowa.cs.clc.kind2.Kind2Exception;
 import edu.uiowa.cs.clc.kind2.lustre.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.tools.Diagnostic;
@@ -16,28 +17,19 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @SpringBootTest
 class SynlongApplicationTests {
 
+    @Autowired
+    private Kind2Api4Synlong kpi;
 
     @Test
     void test() {
-        String program = "111";
-        String smtSolver = "Z3";
-        Kind2Api4Synlong api = new Kind2Api4Synlong();
-        // 执行kind2对synlong进行验证
-        // 设置求解器
-        System.out.println(api.getSmtSolver().toString());
-        System.out.println(SolverOption.getBySmtSolver(smtSolver));
-        api.setSmtSolver(SolverOption.getBySmtSolver(smtSolver));
-        System.out.println(api.getSmtSolver());
-        // 执行验证
-//        List<String> output = api.execute(program);
-//        for (String s:output) {
-//            System.out.println(s);
-//        }
+        String command = kpi.getCommand();
+        System.out.println(command);
     }
     @Test
     void testSolverOption() {
@@ -69,11 +61,10 @@ class SynlongApplicationTests {
         } catch (IOException | InterruptedException e) {
             throw new Kind2Exception("执行命令时发生错误: " + e.getMessage(), e);
         }
-        List<String> out = OutputUtil.OutputInitialize(output.toString().trim());
-        for (String s:out) {
-            System.out.println(s);
-        }
-//        System.out.println(output.toString().trim());
+//        List<String> out = OutputUtil.OutputInitialize(output.toString().trim());
+        Output<String, Map<String, String>> out = OutputUtil.OutputInit(output.toString().trim());
+
+        System.out.println(out);
     }
     private static String removeAnsiEscapeCodes(String input) {
 
