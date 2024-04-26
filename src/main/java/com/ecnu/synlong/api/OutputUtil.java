@@ -1,6 +1,9 @@
 package com.ecnu.synlong.api;
 
 import com.ecnu.synlong.common.Output;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,5 +82,27 @@ public class OutputUtil {
         System.out.println(result.entrySet());
 
         return result;
+    }
+    public static String JsonOutputInit(String output) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode root = mapper.readTree(output);
+
+        JsonNode propertyEntry = null;
+
+        for (JsonNode entry : root) {
+
+            if ("property".equals(entry.get("objectType").asText())) {
+
+                propertyEntry = entry;
+
+                break;
+
+            }
+
+        }
+        assert propertyEntry != null;
+        System.out.println(propertyEntry);
+        return propertyEntry.toString();
     }
 }

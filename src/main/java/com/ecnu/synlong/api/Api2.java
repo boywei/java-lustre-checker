@@ -2,6 +2,7 @@ package com.ecnu.synlong.api;
 
 import com.ecnu.synlong.common.Output;
 import com.ecnu.synlong.common.SolverOption;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.uiowa.cs.clc.kind2.Kind2Exception;
 import edu.uiowa.cs.clc.kind2.api.IProgressMonitor;
 import lombok.Data;
@@ -17,8 +18,8 @@ import java.util.Map;
 @Component
 public class Api2 {
 
-    @Value("${tool.path}")
-    private String TOOL;
+//    @Value("${tool.path}")
+    private String TOOL = "./file/tool/tool";
     // 睡眠时间
     private static final long POLL_INTERVAL = 100;
 
@@ -27,8 +28,8 @@ public class Api2 {
 
 //    private String z3Bin;
 
-    @Value("${tool.file.path}")
-    private String FILE_PATH;
+//    @Value("${tool.file.path}")
+    private String FILE_PATH = "./file/test.lus";
 
     private String OUTPUT_FORMAT = "-json";
 
@@ -36,64 +37,13 @@ public class Api2 {
         return ApiUtil.getQuotedCommand(getKind2ProcessBuilder().command());
     }
 
-    public Output<String, Map<String, String>> execute(String program) {
+    public String execute(String program) throws JsonProcessingException {
         return call(program);
     }
 
-    @Deprecated
-    public String execute(String program, IProgressMonitor monitor) {
-        try {
-            return call(program, monitor);
-        } catch (Throwable t) {
-            throw new Kind2Exception(t.getMessage(), t);
-        }
 
-    }
 
-    @Deprecated
-    private String call(String program, IProgressMonitor monitor)
-            throws IOException, InterruptedException {
-//		ProcessBuilder builder = getKind2ProcessBuilder();
-        ProcessBuilder builder = new ProcessBuilder("bash", "-c", "kind2 " + FILE_PATH + " --smt_solver z3");
-        System.out.println(ApiUtil.getQuotedCommand(builder.command()));
-        // TODO
-        saveKind2Program(program);
-
-        Process process = null;
-        String output = "";
-
-        try {
-            process = builder.start();
-//			process.getOutputStream().write(program.getBytes());
-//			process.getOutputStream().flush();
-//			process.getOutputStream().close();
-            while (!monitor.isCanceled() && process.isAlive()) {
-                int available = process.getInputStream().available();
-                byte[] bytes = new byte[available];
-                process.getInputStream().read(bytes);
-                output += new String(bytes);
-                System.out.println("output: " + output);
-                sleep();
-            }
-        } finally {
-            if (!monitor.isCanceled()) {
-                int available = process.getInputStream().available();
-                byte[] bytes = new byte[available];
-                process.getInputStream().read(bytes);
-                output += new String(bytes);
-            }
-            if (process != null) {
-                process.destroy();
-            }
-            monitor.done();
-        }
-        return output;
-    }
-
-    /**
-     * 调用kind2
-     */
-    public Output<String, Map<String, String>> call(String program) {
+    public String call(String program) throws JsonProcessingException {
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
 
@@ -121,7 +71,8 @@ public class Api2 {
             throw new Kind2Exception("执行命令时发生错误: " + e.getMessage(), e);
         }
 
-        return OutputUtil.OutputInit(output.toString().trim());
+        return OutputUtil.JsonOutputInit(output.toString().trim());
+//        return output.toString().trim();
     }
 
     /**

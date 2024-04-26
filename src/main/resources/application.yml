@@ -1,9 +1,10 @@
 server:
   port: 8081
 
-kind2:
-  path: "/usr/local/kind2/kind2"
+tool:
+  path: "./file/tool/tool"
+#  "/home/jiang/Documents/ECNU/synlong/synlong/src/main/java/com/ecnu/synlong/api/Api.java"
   file:
-    path: "/home/jiang/Documents/ECNU/synlong/synlong/file/test.lus"
+    path: "./file/test.lus"
 
 

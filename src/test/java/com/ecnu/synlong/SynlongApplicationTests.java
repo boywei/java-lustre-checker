@@ -1,6 +1,6 @@
 package com.ecnu.synlong;
 
-import com.ecnu.synlong.api.Kind2Api4Synlong;
+import com.ecnu.synlong.api.Api;
 import com.ecnu.synlong.api.OutputUtil;
 import com.ecnu.synlong.common.Output;
 import com.ecnu.synlong.common.SolverOption;
@@ -10,13 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.tools.Diagnostic;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 
@@ -24,7 +22,7 @@ import java.util.Map;
 class SynlongApplicationTests {
 
     @Autowired
-    private Kind2Api4Synlong kpi;
+    private Api kpi;
 
     @Test
     void test() {
@@ -39,7 +37,7 @@ class SynlongApplicationTests {
 
     @Test
     void testApi2() {
-        Kind2Api4Synlong api = new Kind2Api4Synlong();
+        Api api = new Api();
         StringBuilder output = new StringBuilder();
 
         try {
@@ -99,9 +97,11 @@ class SynlongApplicationTests {
 
 
         // Create a Kind2Api object to set options and check the Lustre program
-        Kind2Api4Synlong api = new Kind2Api4Synlong();
+        Api api = new Api();
         // Call Kind2Api's execute method to run Kind 2 analysis on the lustre program. The results of
         // the analysis are saved in a Kind2Result object
+//        Output<String, Map<String, String>> res = api.execute(pb.build().toString());
+//        System.out.println(res);
 //        List<String> result = api.execute(pb.build().toString());
 
 //        for (String s:result) {

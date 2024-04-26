@@ -1,7 +1,6 @@
 package com.ecnu.synlong;
 
-import com.ecnu.synlong.api.ApiUtil;
-import com.ecnu.synlong.api.Kind2Api4Synlong;
+import com.ecnu.synlong.api.Api;
 import com.ecnu.synlong.api.OutputUtil;
 import com.ecnu.synlong.common.Output;
 import com.ecnu.synlong.common.SolverOption;
@@ -18,7 +17,7 @@ public class OutputUtilTests {
     @Test
     void testOutputInit (){
         String filePath = "/home/jiang/Documents/ECNU/synlong/synlong/file/test.lus"; // replace with your file path
-        Kind2Api4Synlong kpi = new Kind2Api4Synlong();
+        Api kpi = new Api();
         kpi.setSmtSolver(SolverOption.Z3);
 
 

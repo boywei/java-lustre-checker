@@ -5,7 +5,6 @@ import com.ecnu.synlong.common.SolverOption;
 import edu.uiowa.cs.clc.kind2.Kind2Exception;
 import edu.uiowa.cs.clc.kind2.api.*;
 import lombok.Data;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +13,10 @@ import java.util.*;
 
 @Data
 @Component
-public class Kind2Api4Synlong /*extends Kind2Api*/ {
+public class Api {
 
-    @Value("${kind2.path}")
-    private String KIND2;
+//    @Value("${tool.path}")
+    private String TOOL = "./file/tool/tool";
     // 睡眠时间
     private static final long POLL_INTERVAL = 100;
 
@@ -26,21 +25,23 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
 
 //    private String z3Bin;
 
-    @Value("${kind2.file.path}")
-    private String FILE_PATH;
+//    @Value("${tool.file.path}")
+    private String FILE_PATH = "./file/test.lus";
+
+    private String OUTPUT_FORMAT = "-json";
 
     public String getCommand() {
         return ApiUtil.getQuotedCommand(getKind2ProcessBuilder().command());
     }
 
     public Output<String, Map<String, String>> execute(String program) {
-        return callKind2(program);
+        return call(program);
     }
 
     @Deprecated
     public String execute(String program, IProgressMonitor monitor) {
         try {
-            return callKind2(program, monitor);
+            return call(program, monitor);
         } catch (Throwable t) {
             throw new Kind2Exception(t.getMessage(), t);
         }
@@ -48,7 +49,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
     }
 
     @Deprecated
-    private String callKind2(String program, IProgressMonitor monitor)
+    private String call(String program, IProgressMonitor monitor)
             throws IOException, InterruptedException {
 //		ProcessBuilder builder = getKind2ProcessBuilder();
         ProcessBuilder builder = new ProcessBuilder("bash", "-c", "kind2 " + FILE_PATH + " --smt_solver z3");
@@ -90,7 +91,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
     /**
      * 调用kind2
      */
-    public Output<String, Map<String, String>> callKind2(String program) {
+    public Output<String, Map<String, String>> call(String program) {
         StringBuilder output = new StringBuilder();
         saveKind2Program(program);
 
@@ -150,7 +151,7 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
 
     void sleep() {
         try {
-            Thread.sleep(Kind2Api4Synlong.POLL_INTERVAL);
+            Thread.sleep(Api.POLL_INTERVAL);
         } catch (InterruptedException e) {
         }
     }
@@ -165,12 +166,13 @@ public class Kind2Api4Synlong /*extends Kind2Api*/ {
         List<String> options = new ArrayList<>();
 //        options.add("bash");
 //        options.add("-c");
-        options.add(KIND2);
+        options.add(TOOL);
 //        options.add("/usr/local/kind2/kind2");
         options.add(FILE_PATH);
         options.add("--smt_solver");
         options.add(smtSolver.toString());
 //		options.add("--z3_bin");
+        options.add(OUTPUT_FORMAT);
         ProcessBuilder builder = new ProcessBuilder(options);
         builder.redirectErrorStream(true);
         return builder;
