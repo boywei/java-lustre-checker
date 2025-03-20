@@ -1,4 +1,4 @@
-package com.ecnu.synlong.api;
+package com.ecnu.synlong.common;
 
 import com.ecnu.synlong.common.Output;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,10 +1,4 @@
 server:
-  port: 8081
-
-tool:
-  path: "./file/tool/tool"
-#  "/home/jiang/Documents/ECNU/synlong/synlong/src/main/java/com/ecnu/synlong/api/Api.java"
-  file:
-    path: "./file/test.lus"
+  port: 8099
 
 
