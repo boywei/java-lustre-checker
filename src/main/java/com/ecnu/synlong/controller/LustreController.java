@@ -1,7 +1,7 @@
 package com.ecnu.synlong.controller;
 
 import com.ecnu.synlong.common.CheckParameter;
-import com.ecnu.synlong.common.R;
+import com.ecnu.synlong.common.ResultConvert;
 import edu.uiowa.cs.clc.kind2.api.Kind2Api;
 import edu.uiowa.cs.clc.kind2.results.Result;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LustreController {
 
     @PostMapping(value = "/check")
-    public R check(@RequestBody CheckParameter checkParameter) {
+    public String check(@RequestBody CheckParameter checkParameter) {
 
         // lustre模型, 包含约束条件
         String program = checkParameter.getFile();
@@ -22,11 +22,14 @@ public class LustreController {
         Kind2Api api = new Kind2Api();
         Result result = api.execute(program);
 
+        String resultString = ResultConvert.convertToString(result);
         // Check if the result object is initialized before printing it.
         if (result.isInitialized()) {
-            System.out.println(result);
+            System.out.println(resultString);
         }
 
-        return R.ok().put("data", result.toString());
+        return resultString;
     }
+
+
 }
