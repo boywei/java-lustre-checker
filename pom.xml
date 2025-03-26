@@ -30,11 +30,12 @@
             <version>4.4.14</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.13.1</version>
-        </dependency>
+        <!-- 和jkind中antlr4.4版本冲突, 所以统一用4.4. 但4.4mvn仓库其实找不到 -->
+<!--        <dependency>-->
+<!--            <groupId>org.antlr</groupId>-->
+<!--            <artifactId>antlr4-runtime</artifactId>-->
+<!--            <version>4.13.1</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
@@ -55,7 +56,7 @@
         <dependency>
             <groupId>edu.uiowa.cs.clc</groupId>
             <artifactId>kind2-java-api</artifactId>
-            <version>0.3.6</version>
+            <version>0.4.1</version>
         </dependency>
 
 
@@ -69,6 +70,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.ecnu</groupId>
+            <artifactId>jkind</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jkind-api.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ecnu</groupId>
+            <artifactId>jkind-api</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jkind.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -76,6 +94,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>
